@@ -3,6 +3,7 @@
 ## Informações gerais
 
 O projeto contido nesse repositório utiliza da biblioteca "opencv" para a leitura do vídeo da webcam do usuário para identificar faces utilizando um modelo já treinado. Ao identificar uma face, o script cria um quadrado preto ao redor dela. Além disso, ele armazena o vídeo gerado em um arquivo "out.avi" na root do repositório.
+O script está localizado no arquivo "app.py", também na root do repositório. Nele, existem comentários para cada linha detalhando melhor o que o código está realizando.
 
 ## Instalação
 

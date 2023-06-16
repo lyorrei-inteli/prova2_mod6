@@ -12,7 +12,7 @@ if not input_video.isOpened():
 width = int(input_video.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(input_video.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-# Cria o arquivo de video de output
+# Cria o arquivo de vídeo de output
 output_video = cv2.VideoWriter(
     "./out.avi", cv2.VideoWriter_fourcc(*"DIVX"), 24, (width, height)
 )
@@ -24,7 +24,7 @@ while True:
     # Lê o frame
     ret, frame = input_video.read()
 
-    # Erro caso nao consiga ler o frame
+    # Erro caso não consiga ler o frame
     if not ret:
         break
 
