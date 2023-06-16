@@ -7,49 +7,54 @@ input_video = cv2.VideoCapture(0)
 if not input_video.isOpened():
     print("Error opening video file")
     exit(1)
-    
-# Como foi possível abrir o video de entrada, vamos agora utilizar 
-# essa captura para definir o tamanho do video de saida
-width  = int(input_video.get(cv2.CAP_PROP_FRAME_WIDTH))   # float `width`
+
+# Variáveis que guardam o tamanho do video
+width = int(input_video.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(input_video.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-# Cria a estrutura do video de saida
-# Com formato e local do arquivo de saida
-# Codec utilizado
-# FPS do video e
-# Tamanho do video
-# output_video = cv2.VideoWriter( './saida/out.avi', cv2.VideoWriter_fourcc(*'DIVX'), 24, (width, height))
+# Cria o arquivo de video de output
+output_video = cv2.VideoWriter(
+    "./out.avi", cv2.VideoWriter_fourcc(*"DIVX"), 24, (width, height)
+)
+
+print("Vídeo sendo iniciado, pressione 'q' para encerrar")
 
 # Loop de leitura frame por frame
 while True:
-    # Le um frame do video e, guarda o resultado da leitura
-    # Se nao houver mais frames disponiveis, ret sera falso
+    # Lê o frame
     ret, frame = input_video.read()
 
-    # Se nao conseguiu ler o frame, para o laco
+    # Erro caso nao consiga ler o frame
     if not ret:
         break
-    
-    # # Vamos editar o frame com um retangulo
-    # cv2.rectangle(
-    #         img=frame,
-    #         pt1=(100, 100),
-    #         pt2=(300, 300),
-    #         color=(0,0,255),
-    #         thickness=5
-    #     )
+
+    # Transforma o frame em escala de cinza
+    gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Cria uma variável com o modelo de detecção de faces do OpenCV
+    face_classifier = cv2.CascadeClassifier(
+        cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+    )
+
+    # Detecta faces
+    face = face_classifier.detectMultiScale(
+        gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(40, 40)
+    )
+
+    # Desenha um retângulo preto em volta da face
+    for x, y, w, h in face:
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 0), 4)
 
     # Exibe o frame
-    cv2.imshow('Video Playback', frame)
-    
-    # # Escreve o frame no output
-    # output_video.write(frame)
+    cv2.imshow("Video Playback", frame)
 
-    # Se o usuario apertar q, encerra o playback
-    # O valor utilizado no waiKey define o fps do playback
-    if cv2.waitKey(30) & 0xFF == ord('q'):
+    # Escreve o frame no vídeo output
+    output_video.write(frame)
+
+    # Encerra o loop caso a tecla "q" seja pressionada
+    if cv2.waitKey(30) & 0xFF == ord("q"):
         break
-    
+
 # Fecha tudo
 output_video.release()
 input_video.release()
